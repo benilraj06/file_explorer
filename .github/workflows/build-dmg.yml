@@ -1,0 +1,60 @@
+name: Build macOS DMG
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  dmg:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build universal DMG (Intel + Apple Silicon)
+        run: npm run dist
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+      - name: Verify app signature and architectures
+        run: |
+          ls -la dist
+          APP="$(ls -d dist/mac*/File\ Explorer.app | head -1)"
+          codesign --verify --deep --strict --verbose=2 "$APP"
+          lipo -archs "$APP/Contents/MacOS/File Explorer"
+
+      - name: Upload DMG artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: File-Explorer-macOS
+          path: dist/*.dmg
+          if-no-files-found: error
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.run_number }}-${{ github.ref_name == 'main' && 'stable' || 'build' }}
+          name: File Explorer for macOS (build ${{ github.run_number }})
+          target_commitish: ${{ github.sha }}
+          prerelease: ${{ github.ref_name != 'main' }}
+          files: dist/*.dmg
+          body: |
+            Windows 11 style File Explorer for macOS — universal DMG (Intel + Apple Silicon).
+
+            **Install:** open the DMG and drag **File Explorer** to **Applications**.
+
+            The app is ad-hoc signed (not notarized), so on first launch macOS will block it:
+            right-click the app → **Open** → **Open**, or run
+            `xattr -cr "/Applications/File Explorer.app"` in Terminal.

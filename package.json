@@ -1,0 +1,71 @@
+{
+  "name": "winexplorer-mac",
+  "productName": "File Explorer",
+  "version": "1.0.0",
+  "description": "A Windows 11 style File Explorer for macOS",
+  "main": "src/main.js",
+  "author": "File Explorer contributors",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "icon": "node build/make-icon.js",
+    "dist": "electron-builder --mac dmg --universal --publish never",
+    "dist:x64": "electron-builder --mac dmg --x64 --publish never",
+    "dist:arm64": "electron-builder --mac dmg --arm64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.fileexplorer.winstyle",
+    "productName": "File Explorer",
+    "copyright": "MIT License",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.icns",
+      "identity": null,
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "target": [
+        "dmg"
+      ],
+      "extendInfo": {
+        "NSDesktopFolderUsageDescription": "File Explorer needs access to show your Desktop folder.",
+        "NSDocumentsFolderUsageDescription": "File Explorer needs access to show your Documents folder.",
+        "NSDownloadsFolderUsageDescription": "File Explorer needs access to show your Downloads folder.",
+        "NSRemovableVolumesUsageDescription": "File Explorer needs access to show removable drives.",
+        "NSNetworkVolumesUsageDescription": "File Explorer needs access to show network drives."
+      }
+    },
+    "dmg": {
+      "title": "File Explorer ${version}",
+      "artifactName": "File-Explorer-${version}-${arch}.dmg",
+      "contents": [
+        {
+          "x": 140,
+          "y": 200
+        },
+        {
+          "x": 400,
+          "y": 200,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "window": {
+        "width": 540,
+        "height": 380
+      }
+    },
+    "afterPack": "build/after-pack.js"
+  }
+}

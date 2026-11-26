@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data: blob:; img-src 'self' file: data: blob:; media-src file: blob:; object-src file:; frame-src file:; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <title>File Explorer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Title bar with tabs -->
+    <header id="titlebar">
+      <div id="tabs" role="tablist"></div>
+      <button id="tab-add" class="icon-btn" title="Add new tab (⌘T)"></button>
+      <div class="titlebar-fill"></div>
+    </header>
+
+    <!-- Navigation / address bar -->
+    <div id="addressbar">
+      <div class="nav-buttons">
+        <button id="btn-back" class="icon-btn" title="Back (⌘[ or Alt+←)"></button>
+        <button id="btn-forward" class="icon-btn" title="Forward (⌘] or Alt+→)"></button>
+        <button id="btn-up" class="icon-btn" title="Up to parent folder (⌘↑)"></button>
+        <button id="btn-refresh" class="icon-btn" title="Refresh (⌘R)"></button>
+      </div>
+      <div id="address" tabindex="-1">
+        <div id="crumbs"></div>
+        <input id="address-input" spellcheck="false" autocomplete="off" />
+        <datalist id="address-suggest"></datalist>
+      </div>
+      <div id="search">
+        <span class="search-icon"></span>
+        <input id="search-input" placeholder="Search" spellcheck="false" autocomplete="off" />
+        <button id="search-clear" class="icon-btn small" title="Clear"></button>
+      </div>
+    </div>
+
+    <!-- Command bar -->
+    <div id="commandbar"></div>
+
+    <!-- Main body -->
+    <div id="body">
+      <nav id="navpane" tabindex="0"></nav>
+      <div class="splitter" id="split-nav"></div>
+      <main id="content-wrap">
+        <div id="content" tabindex="0"></div>
+        <div id="marquee"></div>
+      </main>
+      <div class="splitter" id="split-pane"></div>
+      <aside id="sidepane"></aside>
+    </div>
+
+    <!-- Status bar -->
+    <footer id="statusbar">
+      <span id="status-count"></span>
+      <span id="status-sel"></span>
+      <span class="spacer"></span>
+      <button id="sb-details" class="icon-btn small" title="Display information about each item in the window"></button>
+      <button id="sb-large" class="icon-btn small" title="Display items by using large thumbnails"></button>
+    </footer>
+  </div>
+
+  <div id="menu-layer"></div>
+  <div id="modal-layer"></div>
+  <div id="progress-layer"></div>
+  <div id="toast-layer"></div>
+  <div id="tooltip"></div>
+
+  <script src="icons.js"></script>
+  <script src="util.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
